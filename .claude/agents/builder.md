@@ -92,12 +92,17 @@ Builder Agentが参照すべき情報の優先順位：
    - 各Phaseの関係性
    - 用語定義、規約
 
-4. **前Phase成果物 (`outputs/phase-{N-1}/`)**
+4. **フェーズ間コンテキスト (`outputs/.phase-context.json`)** (Phase 2以降)
+   - 前Phaseの判断・要約・docs要点を含む
+   - これを読めばdocs/全体の再読み込みは省略可能
+   - 必要に応じてdocs/の個別ファイルを参照
+
+5. **前Phase成果物 (`outputs/phase-{N-1}/`)** (必要時のみ)
    - 継続性のある情報
    - 参照すべきデータ
    - 一貫性チェック用
 
-5. **検証レポート (`.validation/report.md`)** (修正時のみ)
+6. **検証レポート (`.validation/report.md`)** (修正時のみ)
    - Validatorからの指摘事項
    - 修正が必要な箇所
    - 修正方針
@@ -111,8 +116,8 @@ Builder Agentが参照すべき情報の優先順位：
 
 Builder Agentの動作:
 1. skills/phase-02/SKILL.md を読み込む
-2. docs/ から関連要件を抽出
-3. outputs/phase-01/ から前Phase成果物を確認
+2. outputs/.phase-context.json を読み、前Phaseの判断・docs要点を把握
+3. 必要に応じてdocs/の個別ファイルを参照（全ファイル再読み込みは不要）
 4. SKILL.mdの手順に従って生成開始
 5. outputs/phase-02/ に保存
 6. .metadata.json を作成して完了

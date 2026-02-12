@@ -1,5 +1,16 @@
 # Changelog
 
+## v6.5 (2026-02-12) — Token Optimization
+- `.claude/rules/` を93%圧縮: 7ファイル 3,308行 → 5ファイル 222行
+  - 核心ルールのみ残し、詳細は `docs/rules-reference/` に移動（自動注入されない）
+  - 毎メッセージ約18,500トークン削減（推定）
+- `MEMORY.md` にプロジェクト構造・eval推移・パターンを記録
+  - セッション開始時のコンテキスト再構築コストを削減
+- フェーズ間コンテキスト引き継ぎ: `outputs/.phase-context.json`
+  - Phase完了時に判断・要約・docs要点を出力
+  - 次Phase開始時にdocs/全体の再読み込みを省略可能
+- Builder エージェント更新: `.phase-context.json` 参照の優先度追加
+
 ## v6.4 (2026-02-12)
 - カテゴリ別インテークテンプレートを追加（`templates/intake/`）
   - `research_report.md`: 10問一括 + カテゴリ固有の深掘り指針

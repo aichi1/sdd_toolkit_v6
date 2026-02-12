@@ -33,9 +33,13 @@ Builder / Validator パターンによる品質担保を行いながら、SDD（
 - ./metadata.json
 ```
 
-**Step 0.2: コンテキスト読み込み**
+**Step 0.2: コンテキスト読み込み（トークン効率化）**
 - `CLAUDE.md` を読み、プロジェクト概要を把握
-- `docs/` 配下の全ファイルをコンテキストに投入
+- `outputs/.phase-context.json` が存在する場合:
+  - このファイルを読み、前Phaseの判断・要約・docs要点を把握
+  - docs/ の全ファイル再読み込みは **省略可能**（必要な箇所だけ参照）
+- `outputs/.phase-context.json` が存在しない場合（Phase 1 等）:
+  - `docs/` 配下の全ファイルをコンテキストに投入
 - 対象フェーズの `skills/` 配下 `SKILL.md` を読み込み
 - `metadata.json` を確認し、過去フェーズの完了状況を把握
 
@@ -270,6 +274,27 @@ Options:
   "current_phase": {N+1 or "complete"}
 }
 ```
+
+**Step 4.1.5: フェーズ間コンテキスト引き継ぎ**
+Phase完了時に `./outputs/.phase-context.json` を作成/更新する。
+次Phaseはこのファイルを読むことで、docs/全体の再読み込みを省略できる。
+
+```json
+{
+  "last_phase": {N},
+  "last_phase_summary": "Phase {N}で達成した内容の1-2文要約",
+  "key_decisions": ["判断1", "判断2"],
+  "output_files": ["outputs/phase-{N}/file1.md", "outputs/phase-{N}/file2.md"],
+  "pending_issues": ["未解決の問題があれば記載"],
+  "next_phase_hint": "次Phaseで重要な情報や注意点",
+  "docs_digest": {
+    "scope": "docs/scope.mdの核心を1-2文で",
+    "key_requirements": ["要件1", "要件2", "要件3"]
+  }
+}
+```
+
+このファイルはフェーズ完了ごとに上書きされる（最新フェーズの情報のみ保持）。
 
 **Step 4.2: 次アクションのプロンプト**
 ```
